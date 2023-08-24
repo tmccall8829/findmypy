@@ -13,6 +13,6 @@ $ cd src && gunicorn --bind :8829 \
 app:app
 
 # then, in a new terminal:
-$ curl -XGET localhost:8829/python-openetl
+$ curl -XGET localhost:8829/p/python-openetl
 >>> {"github_url":"https://github.com/tmccall8829/python-openetl"}
 ```
