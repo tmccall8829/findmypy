@@ -1,4 +1,5 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 from utils.api import FindMyPy
 
@@ -20,4 +21,9 @@ def index():
 def return_package_github_url(package_name: str):
     url = FindMyPy.get_github_url(package_name=package_name)
 
-    return {"github_url": url}
+    if not url:
+        raise HTTPException(
+            status_code=404, detail=f"Github repo URL for {package_name} not found."
+        )
+
+    return RedirectResponse(url)
