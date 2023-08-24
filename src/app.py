@@ -7,8 +7,6 @@ from utils.api import FindMyPy
 
 app = FastAPI()
 
-app.mount("/", StaticFiles(directory="ui", html=True), name="ui")
-
 
 @app.get("/p/{package_name}", response_model=PackageURL)
 def return_package_github_url(package_name: str):
@@ -20,3 +18,6 @@ def return_package_github_url(package_name: str):
         )
 
     return RedirectResponse(url)
+
+
+app.mount("/", StaticFiles(directory="ui", html=True), name="ui")
