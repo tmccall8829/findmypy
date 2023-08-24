@@ -1,13 +1,10 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import RedirectResponse
-from pydantic import BaseModel
+
+from models.package import PackageURL
 from utils.api import FindMyPy
 
 app = FastAPI()
-
-
-class PackageURL(BaseModel):
-    github_url: str | None
 
 
 @app.get("/")
