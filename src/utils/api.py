@@ -19,7 +19,8 @@ class FindMyPy:
         url = f"https://www.pypi.org/pypi/{package_name}/json"
         resp = requests.get(url)
 
-        resp.raise_for_status()
+        if not resp.ok:
+            return None
 
         payload = resp.json()
         package_urls_blob = payload.get("info", {}).get("project_urls", {})
