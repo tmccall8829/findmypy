@@ -1,6 +1,5 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import RedirectResponse
-from fastapi.staticfiles import StaticFiles
 
 from models.package import PackageURL
 from utils.api import FindMyPy
@@ -8,7 +7,12 @@ from utils.api import FindMyPy
 app = FastAPI()
 
 
-@app.get("/p/{package_name}", response_model=PackageURL)
+@app.get("/")
+def index():
+    return RedirectResponse("https://github.com/tmccall8829/findmypy/")
+
+
+@app.get("/{package_name}", response_model=PackageURL)
 def return_package_github_url(package_name: str):
     url = FindMyPy.get_github_url(package_name=package_name)
 
@@ -17,7 +21,6 @@ def return_package_github_url(package_name: str):
             status_code=404, detail=f"Github repo URL for {package_name} not found."
         )
 
+    print(url)
+
     return RedirectResponse(url)
-
-
-app.mount("/", StaticFiles(directory="ui", html=True), name="ui")

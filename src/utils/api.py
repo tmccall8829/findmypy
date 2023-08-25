@@ -1,3 +1,4 @@
+import logging
 import requests
 
 
@@ -23,8 +24,27 @@ class FindMyPy:
             return None
 
         payload = resp.json()
-        package_urls_blob = payload.get("info", {}).get("project_urls", {})
+        project_urls_blob = payload.get("info", {}).get("project_urls", {})
 
-        homepage_url = package_urls_blob.get("Homepage")
+        # some pypi projects have a "repository" key and some don't
+        # also, sometimes these keys are capitalized in the payload
+        search_keys = ["repository", "homepage"]
 
-        return homepage_url
+        url_blob_keys = list(project_urls_blob.keys())
+        for key in search_keys:
+            cap_key = key.capitalize()
+            if key in url_blob_keys and "github.com" in project_urls_blob[key]:
+                url = project_urls_blob[key]
+                logging.info(f"Found repo url for {package_name} under {key}: {url}")
+                return url
+            elif (
+                cap_key in url_blob_keys and "github.com" in project_urls_blob[cap_key]
+            ):
+                url = project_urls_blob[cap_key]
+                logging.info(
+                    f"Found repo url for {package_name} under {cap_key}: {url}"
+                )
+                return url
+
+        logging.warning(f"Repo or homepage URL not found for {package_name}")
+        return f"https://pypi.org/project/{package_name}"
