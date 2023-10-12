@@ -21,6 +21,4 @@ def return_package_github_url(package_name: str):
             status_code=404, detail=f"Github repo URL for {package_name} not found."
         )
 
-    print(url)
-
     return RedirectResponse(url)
